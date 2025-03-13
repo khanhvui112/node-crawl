@@ -141,7 +141,7 @@ async function commonCallPuppeteer(headers, body) {
         headers: headers,
         body: JSON.stringify(body)
     };
-    const originalIP = await getIP(page); //check proxy
+    // const originalIP = await getIP(page); //check proxy
     try {
         await page.exposeFunction("makeRequest", async () => {
             try {
