@@ -71,7 +71,7 @@ async function getIP(page) {
     try {
         await page.goto("https://api.myip.com/");
         const ipData = await page.evaluate(() => document.body.innerText);
-        console.log(ipData)
+        console.log('IP:', ipData)
         return ipData;
     } catch (error) {
         console.error("Lỗi lấy IP:", error);
@@ -120,12 +120,28 @@ async function commonCallPuppeteer(headers, body) {
         delete headers['content-length'];
     }
     headers.host = 'superbuy.com'
+    headers = {
+        ...headers,
+        'x-forwarded-for': '171.236.119.95',
+
+        'x-forwarded-host': 'node-crawl-production.up.railway.app',
+
+        'x-forwarded-proto': 'https',
+
+        'x-railway-edge': 'railway/asia-southeast1',
+
+        'x-railway-request-id': 'guuT8GXGQMySM0Be2uZ3ZQ_3176973899',
+
+        'x-real-ip': '171.236.119.95',
+
+        'x-request-start': '1741884209109',
+    }
     let requestOptions = {
         method: 'POST',
         headers: headers,
         body: JSON.stringify(body)
     };
-    // const originalIP = await getIP(page); check proxy
+    const originalIP = await getIP(page); //check proxy
     try {
         await page.exposeFunction("makeRequest", async () => {
             try {
