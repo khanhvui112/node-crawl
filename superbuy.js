@@ -113,6 +113,20 @@ async function commonCallPuppeteer(headers, body) {
     await page.setRequestInterception(true);
     await page.setBypassCSP(true); // Bỏ qua kiểm tra Content Security Policy
     headers = headers || {};
+    await page.evaluateOnNewDocument(() => {
+        Object.defineProperty(navigator, 'webdriver', { get: () => false });
+    });
+
+    // 🛑 Fake WebRTC
+    await page.evaluateOnNewDocument(() => {
+        Object.defineProperty(navigator, 'deviceMemory', { get: () => 8 });
+        Object.defineProperty(navigator, 'hardwareConcurrency', { get: () => 4 });
+    });
+
+    // 🛑 Fake User-Agent
+    await page.setUserAgent(
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36"
+    );
     if (!headers['Content-Type']) {
         headers['Content-Type'] = 'application/json';
     }
