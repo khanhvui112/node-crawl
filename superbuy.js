@@ -122,19 +122,19 @@ async function commonCallPuppeteer(headers, body) {
     headers.host = 'superbuy.com'
     headers = {
         ...headers,
-        'x-forwarded-for': '171.236.119.95',
+        'x-forwarded-for': '',
 
-        'x-forwarded-host': 'node-crawl-production.up.railway.app',
+        'x-forwarded-host': '',
 
-        'x-forwarded-proto': 'https',
+        'x-forwarded-proto': '',
 
-        'x-railway-edge': 'railway/asia-southeast1',
+        'x-railway-edge': '',
 
-        'x-railway-request-id': 'guuT8GXGQMySM0Be2uZ3ZQ_3176973899',
+        'x-railway-request-id': '',
 
-        'x-real-ip': '171.236.119.95',
+        'x-real-ip': '',
 
-        'x-request-start': '1741884209109',
+        'x-request-start': '',
     }
     let requestOptions = {
         method: 'POST',
