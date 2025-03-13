@@ -28,7 +28,7 @@ apiRouter.post("/superbuy", async (req, res) => {
 
 app.use("/api", apiRouter);
 app.listen(port, () => {
-    console.log(`API đang chạy tại http://localhost:${port}/api`);
+    console.log(`Server running on port ${process.env.PORT || 3000}`);
 });
 app.use((req, res, next) => {
     // console.log("Incoming request:");
