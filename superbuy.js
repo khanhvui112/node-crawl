@@ -120,22 +120,12 @@ async function commonCallPuppeteer(headers, body) {
         delete headers['content-length'];
     }
     headers.host = 'superbuy.com'
-    headers = {
-        ...headers,
-        'x-forwarded-for': '',
-
-        'x-forwarded-host': '',
-
-        'x-forwarded-proto': '',
-
-        'x-railway-edge': '',
-
-        'x-railway-request-id': '',
-
-        'x-real-ip': '',
-
-        'x-request-start': '',
-    }
+    headers = Object.keys(headers).reduce((acc, key) => {
+        if (!key.startsWith('x-')) {
+            acc[key] = headers[key];
+        }
+        return acc;
+    }, {});
     let requestOptions = {
         method: 'POST',
         headers: headers,
