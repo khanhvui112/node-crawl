@@ -1,9 +1,8 @@
-import express from "express";
-import * as superBuy from "./superbuy.js";
+const express = require("express");
+const superBuy = require("./superbuy.js");
 const app = express();
 const port = 3000;
-import cors from "cors";
-
+const cors = require("cors");
 app.use(cors());
 app.use(express.json());
 const apiRouter = express.Router();
@@ -17,7 +16,7 @@ apiRouter.post("/superbuy", async (req, res) => {
     }
     try {
         let result = await superBuy.commonCallPuppeteer(req.headers, body);
-        // console.log(result)
+        console.log(result)
         res.json(result.data);
     } catch (error) {
         res.status(500).json({

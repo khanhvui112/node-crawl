@@ -1,7 +1,8 @@
-import puppeteer from 'puppeteer-extra';
-import StealthPlugin from 'puppeteer-extra-plugin-stealth';
-
-export async function commonCall(headers, body) {
+// import puppeteer from 'puppeteer-extra';
+const puppeteer = require("puppeteer-extra");
+// import StealthPlugin from 'puppeteer-extra-plugin-stealth';
+const StealthPlugin = require("puppeteer-extra-plugin-stealth");
+ async function commonCall(headers, body) {
     let url = '';
     if (body.originUrl) {
         url = body.originUrl;
@@ -78,11 +79,12 @@ async function getIP(page) {
     }
 }
 
-export async function commonCallPuppeteer(headers, body) {
+async function commonCallPuppeteer(headers, body) {
     puppeteer.use(StealthPlugin());
     let url = '';
     let puppeteerOptions = {
-        headless: true // Chạy ẩn (headless mode)
+        headless: true, // Chạy ẩn (headless mode)
+        args: ["--no-sandbox", '--disable-setuid-sandbox']
     }
     let useProxy = false;
     let proxyUsername = '', proxyPassword = '';
@@ -95,7 +97,7 @@ export async function commonCallPuppeteer(headers, body) {
         const auth = body.proxyUrl.toString().split("@")[0].replace(/^https?:\/\//, '');
         proxyUsername = auth.split(":")[0]
         proxyPassword = auth.split(":")[1]
-        puppeteerOptions.args = [`--proxy-server=${proxy}`]
+        puppeteerOptions.args = [...puppeteerOptions.args, `--proxy-server=${proxy}`]
         delete body.proxyUrl;
         useProxy = true;
     }
@@ -108,6 +110,8 @@ export async function commonCallPuppeteer(headers, body) {
             password: proxyPassword
         });
     }
+    await page.setRequestInterception(true);
+    await page.setBypassCSP(true); // Bỏ qua kiểm tra Content Security Policy
     headers = headers || {};
     if (!headers['Content-Type']) {
         headers['Content-Type'] = 'application/json';
@@ -130,6 +134,7 @@ export async function commonCallPuppeteer(headers, body) {
                 }
                 return await res.json();
             } catch (error) {
+                console.log('Err', error)
                 return {error: error.message};
             }
         });
@@ -157,3 +162,8 @@ export async function commonCallPuppeteer(headers, body) {
         };
     }
 }
+
+
+module.exports = {
+    commonCallPuppeteer
+};
