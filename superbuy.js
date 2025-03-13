@@ -119,6 +119,7 @@ async function commonCallPuppeteer(headers, body) {
     if (headers['content-length']) {
         delete headers['content-length'];
     }
+    headers.host = 'superbuy.com'
     let requestOptions = {
         method: 'POST',
         headers: headers,
