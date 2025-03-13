@@ -128,6 +128,7 @@ async function commonCallPuppeteer(headers, body) {
     try {
         await page.exposeFunction("makeRequest", async () => {
             try {
+                console.log("Headers:", headers);
                 const res = await fetch(url, requestOptions);
                 if (!res.ok) {
                     return {error: res.status};

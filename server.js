@@ -31,10 +31,10 @@ app.listen(port, () => {
     console.log(`API đang chạy tại http://localhost:${port}/api`);
 });
 app.use((req, res, next) => {
-    console.log("Incoming request:");
-    console.log("Method:", req.method);
-    console.log("URL:", req.originalUrl);
-    console.log("Headers:", req.headers);
-    console.log("Body:", req.body);
+    // console.log("Incoming request:");
+    // console.log("Method:", req.method);
+    // console.log("URL:", req.originalUrl);
+    // console.log("Headers:", req.headers);
+    // console.log("Body:", req.body);
     next();
 });
