@@ -22,7 +22,9 @@ async function commonCallPuppeteer(headers, body) {
     let url = '';
     let puppeteerOptions = {
         headless: "new", // Chạy ẩn (headless mode)
-        args: ["--no-sandbox", '--disable-setuid-sandbox']
+        args: ["--no-sandbox", '--disable-setuid-sandbox',
+            "--disable-setuid-sandbox"
+        ]
     }
     let useProxy = false;
     let proxyUsername = '', proxyPassword = '';
@@ -41,9 +43,17 @@ async function commonCallPuppeteer(headers, body) {
     }
     const browser = await puppeteer.launch(puppeteerOptions);
     const page = await browser.newPage();
+    await page.evaluateOnNewDocument(() => {
+        Object.defineProperty(window, 'localStorage', {
+            get: () => ({
+                getItem: () => null,
+                setItem: () => {},
+                removeItem: () => {},
+                clear: () => {},
+            })
+        });
+    });
     await page.deleteCookie(...(await page.cookies()));
-    // await page.evaluate(() => localStorage.clear());
-    // await page.evaluate(() => sessionStorage.clear());
     if (useProxy) {
         // Xác thực Proxy
         await page.authenticate({
