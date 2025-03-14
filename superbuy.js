@@ -23,7 +23,8 @@ async function commonCallPuppeteer(headers, body) {
     let puppeteerOptions = {
         headless: "new", // Chạy ẩn (headless mode)
         args: ["--no-sandbox", '--disable-setuid-sandbox',
-            "--disable-setuid-sandbox"
+            "--disable-setuid-sandbox",
+            "--incognito"
         ]
     }
     let useProxy = false;
@@ -42,7 +43,8 @@ async function commonCallPuppeteer(headers, body) {
         useProxy = true;
     }
     const browser = await puppeteer.launch(puppeteerOptions);
-    const page = await browser.newPage();
+    const context = await browser.createBrowserContext();
+    const page = await context.newPage();
     await page.evaluateOnNewDocument(() => {
         Object.defineProperty(window, 'localStorage', {
             get: () => ({
