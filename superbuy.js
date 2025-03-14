@@ -76,7 +76,7 @@ async function commonCallPuppeteer(headers, body) {
     if (headers['content-length']) {
         delete headers['content-length'];
     }
-    headers.host = 'superbuy.com'
+    // headers.host = 'superbuy.com'
     headers["Accept-Language"] = "en-US,en;q=0.9";
     headers["Referer"] = 'https://www.superbuy.com/';
     // headers["Connection"] = "keep-alive";
