@@ -21,13 +21,9 @@ async function commonCallPuppeteer(headers, body) {
     puppeteer.use(StealthPlugin());
     let url = '';
     let puppeteerOptions = {
-        headless: "news", // Để headless true dễ bị chặn
-        args: [
-            "--no-sandbox",
-            "--disable-setuid-sandbox",
-            "--disable-blink-features=AutomationControlled"
-        ]
-    };
+        headless: "news", // Chạy ẩn (headless mode)
+        args: ["--no-sandbox", '--disable-setuid-sandbox']
+    }
     let useProxy = false;
     let proxyUsername = '', proxyPassword = '';
     if (body.originUrl) {
@@ -60,10 +56,10 @@ async function commonCallPuppeteer(headers, body) {
     if (headers['content-length']) {
         delete headers['content-length'];
     }
+    headers.host = 'superbuy.com'
     headers["Accept-Language"] = "en-US,en;q=0.9";
     headers["Referer"] = url;
     headers["Connection"] = "keep-alive";
-    headers.host = 'superbuy.com'
     headers = Object.keys(headers).reduce((acc, key) => {
         if (!key.startsWith('x-')) {
             acc[key] = headers[key];
