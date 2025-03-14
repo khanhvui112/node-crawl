@@ -21,7 +21,7 @@ async function commonCallPuppeteer(headers, body) {
     puppeteer.use(StealthPlugin());
     let url = '';
     let puppeteerOptions = {
-        headless: false, // Để headless true dễ bị chặn
+        headless: "news", // Để headless true dễ bị chặn
         args: [
             "--no-sandbox",
             "--disable-setuid-sandbox",
