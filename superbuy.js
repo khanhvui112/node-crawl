@@ -25,7 +25,8 @@ async function commonCallPuppeteer(headers, body) {
         args: ["--no-sandbox", '--disable-setuid-sandbox',
             "--disable-setuid-sandbox",
             "--incognito"
-        ]
+        ],
+        userDataDir: "/tmp/puppeteer_profile"
     }
     let useProxy = false;
     let proxyUsername = '', proxyPassword = '';
