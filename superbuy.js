@@ -21,7 +21,7 @@ async function commonCallPuppeteer(headers, body) {
     puppeteer.use(StealthPlugin());
     let url = '';
     let puppeteerOptions = {
-        headless: "news", // Chạy ẩn (headless mode)
+        headless: "new", // Chạy ẩn (headless mode)
         args: ["--no-sandbox", '--disable-setuid-sandbox']
     }
     let useProxy = false;
