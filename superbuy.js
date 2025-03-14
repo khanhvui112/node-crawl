@@ -60,6 +60,9 @@ async function commonCallPuppeteer(headers, body) {
     if (headers['content-length']) {
         delete headers['content-length'];
     }
+    headers["Accept-Language"] = "en-US,en;q=0.9";
+    headers["Referer"] = url;
+    headers["Connection"] = "keep-alive";
     headers.host = 'superbuy.com'
     headers = Object.keys(headers).reduce((acc, key) => {
         if (!key.startsWith('x-')) {
