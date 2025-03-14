@@ -21,9 +21,13 @@ async function commonCallPuppeteer(headers, body) {
     puppeteer.use(StealthPlugin());
     let url = '';
     let puppeteerOptions = {
-        headless: true, // Chạy ẩn (headless mode)
-        args: ["--no-sandbox", '--disable-setuid-sandbox']
-    }
+        headless: false, // Để headless true dễ bị chặn
+        args: [
+            "--no-sandbox",
+            "--disable-setuid-sandbox",
+            "--disable-blink-features=AutomationControlled"
+        ]
+    };
     let useProxy = false;
     let proxyUsername = '', proxyPassword = '';
     if (body.originUrl) {
@@ -72,7 +76,7 @@ async function commonCallPuppeteer(headers, body) {
     try {
         await page.exposeFunction("makeRequest", async () => {
             try {
-                // console.log("Headers:", headers);
+                console.log("Headers:", headers);
                 const res = await fetch(url, requestOptions);
                 if (!res.ok) {
                     return {error: res.status};
