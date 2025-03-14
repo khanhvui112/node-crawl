@@ -155,7 +155,7 @@ async function commonCallPuppeteer(headers, body) {
                 return {error: error.message};
             }
         });
-
+        await page.close()
         return {
             status: response.status,
             data: response,
@@ -163,6 +163,7 @@ async function commonCallPuppeteer(headers, body) {
             success: true,
         };
     } catch (error) {
+        await page.close()
         return {
             status: 200,
             data: null,
