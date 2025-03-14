@@ -69,9 +69,11 @@ const StealthPlugin = require("puppeteer-extra-plugin-stealth");
 // Hàm lấy địa chỉ IP hiện tại qua API
 async function getIP(page) {
     try {
-        await page.goto("https://api.myip.com/");
-        const ipData = await page.evaluate(() => document.body.innerText);
-        console.log('IP:', ipData)
+        await page.goto("https://checkip.amazonaws.com/", { waitUntil: 'networkidle2' });
+
+        const ipData = await page.evaluate(() => document.body.textContent.trim());
+
+        console.log('Your IP:', ipData);
         return ipData;
     } catch (error) {
         console.error("Lỗi lấy IP:", error);
@@ -110,23 +112,8 @@ async function commonCallPuppeteer(headers, body) {
             password: proxyPassword
         });
     }
-    await page.setRequestInterception(true);
-    await page.setBypassCSP(true); // Bỏ qua kiểm tra Content Security Policy
+
     headers = headers || {};
-    await page.evaluateOnNewDocument(() => {
-        Object.defineProperty(navigator, 'webdriver', { get: () => false });
-    });
-
-    // 🛑 Fake WebRTC
-    await page.evaluateOnNewDocument(() => {
-        Object.defineProperty(navigator, 'deviceMemory', { get: () => 8 });
-        Object.defineProperty(navigator, 'hardwareConcurrency', { get: () => 4 });
-    });
-
-    // 🛑 Fake User-Agent
-    await page.setUserAgent(
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36"
-    );
     if (!headers['Content-Type']) {
         headers['Content-Type'] = 'application/json';
     }
@@ -145,7 +132,7 @@ async function commonCallPuppeteer(headers, body) {
         headers: headers,
         body: JSON.stringify(body)
     };
-    // const originalIP = await getIP(page); //check proxy
+    const originalIP = await getIP(page); //check proxy
     try {
         await page.exposeFunction("makeRequest", async () => {
             try {
