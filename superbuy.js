@@ -21,13 +21,16 @@ async function commonCallPuppeteer(headers, body) {
     puppeteer.use(StealthPlugin());
     let url = '';
     let puppeteerOptions = {
-        headless: "new", // Chạy ẩn (headless mode)
-        args: ["--no-sandbox", '--disable-setuid-sandbox',
+        headless: true, // Tắt headless để kiểm tra lỗi
+        args: [
+            "--no-sandbox",
             "--disable-setuid-sandbox",
-            "--incognito"
-        ],
-        userDataDir: "/tmp/puppeteer_profile"
-    }
+            "--incognito",
+            "--disable-blink-features=AutomationControlled"
+        ]
+    };
+
+
     let useProxy = false;
     let proxyUsername = '', proxyPassword = '';
     if (body.originUrl) {
@@ -47,14 +50,7 @@ async function commonCallPuppeteer(headers, body) {
     const context = await browser.createBrowserContext();
     const page = await context.newPage();
     await page.evaluateOnNewDocument(() => {
-        Object.defineProperty(window, 'localStorage', {
-            get: () => ({
-                getItem: () => null,
-                setItem: () => {},
-                removeItem: () => {},
-                clear: () => {},
-            })
-        });
+        Object.defineProperty(navigator, 'webdriver', { get: () => undefined });
     });
     await page.deleteCookie(...(await page.cookies()));
     if (useProxy) {
@@ -66,6 +62,7 @@ async function commonCallPuppeteer(headers, body) {
     }
 
     headers = headers || {};
+    await page.setUserAgent(`Mozilla/5.0 (Windows NT ${Math.floor(Math.random() * 10) + 6}.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/${Math.floor(Math.random() * 5) + 90}.0.0.0 Safari/537.36`);
     if (!headers['Content-Type']) {
         headers['Content-Type'] = 'application/json';
     }
