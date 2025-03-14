@@ -58,7 +58,7 @@ async function commonCallPuppeteer(headers, body) {
     }
     headers.host = 'superbuy.com'
     headers["Accept-Language"] = "en-US,en;q=0.9";
-    headers["Referer"] = url;
+    headers["Referer"] = 'https://www.superbuy.com/';
     // headers["Connection"] = "keep-alive";
     headers = Object.keys(headers).reduce((acc, key) => {
         if (!key.startsWith('x-')) {
