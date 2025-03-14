@@ -42,8 +42,8 @@ async function commonCallPuppeteer(headers, body) {
     const browser = await puppeteer.launch(puppeteerOptions);
     const page = await browser.newPage();
     await page.deleteCookie(...(await page.cookies()));
-    await page.evaluate(() => localStorage.clear());
-    await page.evaluate(() => sessionStorage.clear());
+    // await page.evaluate(() => localStorage.clear());
+    // await page.evaluate(() => sessionStorage.clear());
     if (useProxy) {
         // Xác thực Proxy
         await page.authenticate({
