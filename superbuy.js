@@ -86,6 +86,9 @@ async function commonCallPuppeteer(headers, body) {
         }
         return acc;
     }, {});
+    headers["Cache-Control"] = "no-cache";
+    headers["Pragma"] = "no-cache";
+    headers["Upgrade-Insecure-Requests"] = "1";
     let requestOptions = {
         method: 'POST',
         headers: headers,
