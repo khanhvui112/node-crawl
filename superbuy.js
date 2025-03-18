@@ -4,7 +4,6 @@ const StealthPlugin = require("puppeteer-extra-plugin-stealth");
 async function commonCallPuppeteer(headers, body) {
     puppeteer.use(StealthPlugin());
 
-    let url = "https://www.superbuy.com/en/";
     let puppeteerOptions = {
         headless: true,
         args: [
@@ -35,27 +34,22 @@ async function commonCallPuppeteer(headers, body) {
         await page.authenticate({ username: proxyUsername, password: proxyPassword });
     }
 
-    // Giảm nhận diện bot
-    await page.evaluateOnNewDocument(() => {
-        Object.defineProperty(navigator, "webdriver", { get: () => false });
-        window.chrome = { runtime: {} };
-        Object.defineProperty(navigator, "languages", { get: () => ["en-US", "en"] });
-        Object.defineProperty(navigator, "platform", { get: () => "Win32" });
-    });
-
     headers = headers || {};
     if (!headers["Content-Type"]) headers["Content-Type"] = "application/json";
     if (headers["content-length"]) delete headers["content-length"];
-    headers.host = "superbuy.com";
+    headers["host"] = "superbuy.com";
     headers["Accept-Language"] = "en-US,en;q=0.9";
-    headers["Referer"] = url;
-    headers["Origin"] = url;
+    headers["Referer"] = "https://www.superbuy.com/en/";
+    headers["Origin"] = "https://www.superbuy.com/en/";
 
     // Xóa các header `x-*`
     headers = Object.keys(headers).reduce((acc, key) => {
-        if (!key.startsWith("x-")) acc[key] = headers[key];
+        if (!key.startsWith("x-") && !["host", "content-length", "origin"].includes(key)) {
+            acc[key] = headers[key];
+        }
         return acc;
     }, {});
+
 
     let requestOptions = {
         method: "POST",
@@ -64,12 +58,18 @@ async function commonCallPuppeteer(headers, body) {
     };
 
     try {
-        // ✅ Gọi API ngay sau khi mở trang
-        await page.goto(url, { waitUntil: "domcontentloaded" }); // Chỉ chờ DOM load, không chờ hết tài nguyên
+        // ✅ Không cần mở Superbuy, chỉ tạo trang trống
+        await page.setRequestInterception(true);
+        page.on("request", request => {
+            if (request.url() === body.originUrl) {
+                request.continue(requestOptions);
+            } else {
+                request.continue();
+            }
+        });
 
-        // ✅ Chạy fetch() bên ngoài `page.evaluate()` để tránh mất context
+        // ✅ Gửi API ngay lập tức mà không cần `goto()`
         const responsePromise = page.waitForResponse(response => response.url() === body.originUrl);
-
         await page.evaluate((fetchUrl, fetchOptions) => {
             fetch(fetchUrl, fetchOptions).catch(err => console.log("🔹 Fetch Error:", err));
         }, body.originUrl, requestOptions);
