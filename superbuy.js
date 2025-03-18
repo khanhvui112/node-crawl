@@ -118,8 +118,8 @@ async function commonCallPuppeteer(headers, body) {
             }
         });
         await page.deleteCookie(...(await page.cookies()));
-        await page.close()
-        await browser.close();
+        // await page.close()
+        // await browser.close();
         return {
             status: response.status,
             data: response,
