@@ -58,7 +58,6 @@ async function commonCallPuppeteer(headers, body) {
     };
 
     try {
-        // ✅ Không cần mở Superbuy, chỉ tạo trang trống
         await page.setRequestInterception(true);
         page.on("request", request => {
             if (request.url() === body.originUrl) {
@@ -71,13 +70,11 @@ async function commonCallPuppeteer(headers, body) {
         // ✅ Gửi API ngay lập tức mà không cần `goto()`
         const responsePromise = page.waitForResponse(response => response.url() === body.originUrl);
         await page.evaluate((fetchUrl, fetchOptions) => {
-            fetch(fetchUrl, fetchOptions).catch(err => console.log("🔹 Fetch Error:", err));
+            fetch(fetchUrl, fetchOptions).catch(err => console.log("Fetch Error:", err));
         }, body.originUrl, requestOptions);
 
         const response = await responsePromise;
         const responseData = await response.json();
-
-        console.log("🔹 Response:", responseData);
         await page.close();
         await browser.close();
 
@@ -88,7 +85,6 @@ async function commonCallPuppeteer(headers, body) {
             success: true,
         };
     } catch (error) {
-        console.error("🔹 Lỗi request:", error);
         await page.close();
         await browser.close();
 
