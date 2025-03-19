@@ -38,10 +38,12 @@ async function setCookiesFromHeader(page, cookieHeader) {
     let cookies = cookieHeader.split(";");
     // const regex = /[^a-zA-Z0-9]$/;
     for (let c of cookies) {
-        c = c.split("=")
+
         // let name = c[0]
         // if (name && name.endsWith(""))
+
         if (c && c !== '') {
+            c = c.split("=")
             await page.setCookie(
                 {name: c[0].trim(), value: c[1].trim(), domain: ".superbuy.com", path: "/"}
             )
