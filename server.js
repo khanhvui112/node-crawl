@@ -16,7 +16,6 @@ apiRouter.post("/superbuy", async (req, res) => {
     }
     try {
         let result = await superBuy.commonCallPuppeteer(req.headers, body);
-        console.log(result)
         res.json(result.data);
     } catch (error) {
         res.status(500).json({
