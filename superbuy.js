@@ -41,9 +41,12 @@ async function setCookiesFromHeader(page, cookieHeader) {
         c = c.split("=")
         // let name = c[0]
         // if (name && name.endsWith(""))
-        await page.setCookie(
-            { name: c[0].trim(), value: c[1].trim(), domain: ".superbuy.com", path: "/" }
-        )
+        if (c && c !== '') {
+            await page.setCookie(
+                {name: c[0].trim(), value: c[1].trim(), domain: ".superbuy.com", path: "/"}
+            )
+        }
+
     }
 }
 
